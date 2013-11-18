@@ -275,8 +275,12 @@ function start_contrail() {
     # launch ...
     if is_ubuntu; then
     REDIS_CONF=/etc/redis/redis.conf
-    else
+    if is_suse; then
+    REDIS_CONF=/etc/redis/default.conf
+    if is_fedora; then
     REDIS_CONF=/etc/redis.conf
+    else
+    exit_distro_not_supported "redis configuration"
     fi
     screen_it redis "sudo redis-server ${REDIS_CONF}"
     screen_it cass "sudo /usr/sbin/cassandra -f"
