@@ -9,7 +9,7 @@ PHYSICAL_INTERFACE=eth0
 ENABLE_CONTRAIL=yes
 Q_PLUGIN=contrail
 
-STACK_DIR=$(cd $(dirname $0) && pwd)
+STACK_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}) && pwd)
 
 # log all screen output to this directory
 SCREEN_LOGDIR=$STACK_DIR/log/screens
