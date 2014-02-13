@@ -11,6 +11,19 @@ set -o xtrace
 BS_FL_CONTROLLERS_PORT=${BS_FL_CONTROLLERS_PORT:-localhost:80}
 BS_FL_OF_PORT=${BS_FL_OF_PORT:-6633}
 
+# Cassandra JAVA Options
+CASS_MAX_HEAP_SIZE=${CASS_MAX_HEAP_SIZE:-4G}
+CASS_HEAP_NEWSIZE=${CASS_HEAP_NEWSIZE:-800M}
+
+# Zookeeper JAVA options
+if [ "$ZK_MAX_HEAP_SIZE" ]; then
+    ZK_JVMFLAGS="$ZK_JVMFLAGS -Xmx${ZK_MAX_HEAP_SIZE}"
+fi
+
+if [ "$ZK_HEAP_NEWSIZE" ]; then
+    ZK_JVMFLAGS="$ZK_JVMFLAGS -Xmn${ZK_HEAP_NEWSIZE}"
+fi
+
 function install_contrail() {
     sudo mkdir -p /var/log/contrail
     sudo chmod 777 /var/log/contrail
@@ -108,9 +121,6 @@ function install_contrail() {
 	    apt_get update
 	    apt_get install --force-yes cassandra
 	    
-	    # fix cassandra's stack size issues
-	    test_install_cassandra_patch
-
 	    # don't start cassandra at boot.  I'll screen_it later
 	    sudo service cassandra stop
 	    sudo update-rc.d -f cassandra remove
@@ -187,10 +197,6 @@ function apply_patch() {
 	    true
 	fi
     fi
-}
-
-function test_install_cassandra_patch() { 
-    apply_patch $TOP_DIR/contrail/cassandra-env.sh.patch /etc/cassandra sudo
 }
 
 function test_install_neutron_patch() { 
@@ -311,9 +317,9 @@ function start_contrail() {
     redis-cli flushall
     screen_it redis "sudo redis-server $REDIS_CONF"
 
-    screen_it cass "sudo $CASS_PATH -f"
+    screen_it cass "export MAX_HEAP_SIZE=$CASS_MAX_HEAP_SIZE; export HEAP_NEWSIZE=$CASS_HEAP_NEWSIZE; sudo $CASS_PATH -f"
 
-    screen_it zk  "cd $CONTRAIL_SRC/third_party/zookeeper-3.4.5; ./bin/zkServer.sh start"
+    screen_it zk  "export JVMFLAGS=\"$ZK_JVMFLAGS\"; cd $CONTRAIL_SRC/third_party/zookeeper-3.4.5; ./bin/zkServer.sh start"
 
     screen_it ifmap "cd $CONTRAIL_SRC/third_party/irond-0.3.0-bin; java -jar ./irond.jar"
     sleep 2
