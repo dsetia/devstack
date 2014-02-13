@@ -38,6 +38,7 @@ ADMIN_PASSWORD=contrail123
 ENABLE_CONTRAIL=yes
 Q_PLUGIN=contrail
 PHYSICAL_INTERFACE=eth1
+#PHYSICAL_INTERFACE_IP=
 
 # use contrail forked neutron repo
 NEUTRON_REPO=https://github.com/dsetia/neutron.git

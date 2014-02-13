@@ -160,6 +160,9 @@ function install_contrail() {
 
     # create config files
     # export passwords in a subshell so setup_contrail can pick them up but they won't leak later
+
+    ip a show dev $PHYSICAL_INTERFACE | grep inet || sudo ip a add $PHYSICAL_INTERFACE_IP/32 dev $PHYSICAL_INTERFACE
+
     (export ADMIN_PASSWORD CONTRAIL_ADMIN_USERNAME SERVICE_TOKEN CONTRAIL_ADMIN_TENANT && 
     python $TOP_DIR/contrail/setup_contrail.py --physical_interface=$PHYSICAL_INTERFACE --cfgm_ip $SERVICE_HOST $contrail_gw_interface
     )
@@ -334,7 +337,7 @@ function start_contrail() {
     screen_it svc-mon "python $(pywhere svc_monitor)/svc_monitor.py --reset_config --conf_file /etc/contrail/svc_monitor.conf"
 
     source /etc/contrail/control_param
-    screen_it control "export LD_LIBRARY_PATH=/opt/stack/contrail/build/lib; $CONTRAIL_SRC/build/debug/control-node/control-node --map-server-url https://${IFMAP_SERVER}:${IFMAP_PORT} --map-user ${IFMAP_USER} --map-password ${IFMAP_PASWD} --hostname ${HOSTNAME} --host-ip ${HOSTIP} --bgp-port ${BGP_PORT} ${CERT_OPTS} ${LOG_LOCAL}"
+    screen_it control "sudo LD_LIBRARY_PATH=/opt/stack/contrail/build/lib PATH=$PATH:$TOP_DIR/bin $CONTRAIL_SRC/build/debug/control-node/control-node --map-server-url https://${IFMAP_SERVER}:${IFMAP_PORT} --map-user ${IFMAP_USER} --map-password ${IFMAP_PASWD} --hostname ${HOSTNAME} --host-ip ${HOSTIP} --bgp-port ${BGP_PORT} ${CERT_OPTS} ${LOG_LOCAL}"
 
     # Provision Vrouter - must be run after API server and schema transformer are up
     sleep 2
