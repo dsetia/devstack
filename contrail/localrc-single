@@ -51,3 +51,9 @@ NEUTRON_BRANCH=master
 
 # use contrail VIF driver with NOVA
 NOVA_VIF_DRIVER=nova_contrail_vif.contrailvif.VRouterVIFDriver
+
+#CASS_MAX_HEAP_SIZE=1G
+#CASS_HEAP_NEWSIZE=400M
+
+#ZK_MAX_HEAP_SIZE=1G
+#ZK_HEAP_NEWSIZE=400M
