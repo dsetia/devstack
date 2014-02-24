@@ -4,7 +4,7 @@ HOST_IP=192.168.56.119
 # allow floating ips from 10.99.99.0
 CONTRAIL_VGW_INTERFACE=vgw
 CONTRAIL_VGW_PUBLIC_SUBNET=10.99.99.0/24 #
-CONTRAIL_VGW_PUBLIC_NETWORK=default-domain:demo:public:public
+CONTRAIL_VGW_PUBLIC_NETWORK=default-domain:admin:public:public
 
 ENABLE_CONTRAIL=yes
 PHYSICAL_INTERFACE=eth0
