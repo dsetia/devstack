@@ -1560,7 +1560,7 @@ if [ $ENABLE_CONTRAIL ]; then
     sudo cat > $TOP_DIR/vnsw.hlpr <<END
 #!/bin/bash
 
-LD_LIBRARY_PATH=/opt/stack/contrail/build/lib $CONTRAIL_SRC/build/debug/vnsw/agent/vnswad --config-file $CONFIG $VROUTER_LOGFILE
+LD_LIBRARY_PATH=/opt/stack/contrail/build/lib $CONTRAIL_SRC/build/debug/vnsw/agent/contrail/vnswad --config-file $CONFIG $VROUTER_LOGFILE
 END
     sudo mv $TOP_DIR/vnsw.hlpr /etc/contrail/
     sudo chmod +x /etc/contrail/vnsw.hlpr
