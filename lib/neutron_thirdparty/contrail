@@ -212,6 +212,8 @@ function install_contrail() {
         sed -ie "s/config\.featurePkg\.webController\.path.*$/config\.featurePkg\.webController\.path = '\/opt\/stack\/contrail\/contrail-web-controller';/" contrail-web-core/config/config.global.js
         sed -ie "s/config\.core_path.*$/config\.core_path = '\/opt\/stack\/contrail\/contrail-web-core';/" contrail-web-controller/webroot/common/js/controller.config.global.js
         cd contrail-web-core
+        make repos
+        (cd ../contrail-webui-third-party && python ./fetch_packages.py)
         make fetch-pkgs-prod
         make dev-env REPO=webController
     fi
